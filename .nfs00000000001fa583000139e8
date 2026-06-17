@@ -1,0 +1,30 @@
+#!/bin/bash
+#SBATCH -A genecore
+#SBATCH -p htc-el8
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --mem 16000M
+#SBATCH --job-name=dsa_pipeline
+#SBATCH -t 6-23:55
+#SBATCH -o execution/pipeline.%N.%j.out
+#SBATCH -e execution/pipeline.%N.%j.err
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=giulia.olivucci@embl.de
+
+
+WORK_DIR="/g/modbase/aml/"
+SINGULARITY_CACHE="/g/modbase/aml/cache"
+TS=$(date +%Y%m%d_%H%M%S)
+export TMPDIR="${WORK_DIR}/tmp"
+mkdir -p $TMPDIR
+export NXF_TEMP="${WORK_DIR}/tmp"
+export APPTAINER_TMPDIR="${WORK_DIR}/tmp"
+export NXF_APPTAINER_CACHEDIR="${SINGULARITY_CACHE}"
+
+nextflow run main.nf \
+--run pipeline \
+--timestamp $TS \
+--samplesheet samplesheet.csv \
+--output_dir ./results \
+-c nextflow.config \
+--bind_path ${WORK_DIR},${SINGULARITY_CACHE}

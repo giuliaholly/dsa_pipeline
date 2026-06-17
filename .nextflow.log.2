@@ -1,0 +1,87 @@
+Jun-17 13:29:13.846 [main] DEBUG nextflow.cli.Launcher - $> nextflow run main.nf --run pipeline --timestamp 20260617_132910 --samplesheet samplesheet.csv --output_dir ./results -c nextflow.config -profile local --singularity_cache /g/modbase/aml/cache/ --bind_path /g/modbase/aml/,/g/modbase/aml/cache/
+Jun-17 13:29:14.007 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 26.04.3
+Jun-17 13:29:14.042 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/olivucci/.nextflow/plugins; core-plugins: nf-amazon@3.9.1,nf-azure@1.22.5,nf-cloudcache@0.6.0,nf-codecommit@0.5.2,nf-console@1.3.0,nf-google@1.27.3,nf-k8s@1.5.4,nf-seqera@0.20.1,nf-tower@1.28.0,nf-wave@1.21.0
+Jun-17 13:29:14.083 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jun-17 13:29:14.085 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jun-17 13:29:14.089 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.14.1 in 'deployment' mode
+Jun-17 13:29:14.113 [main] DEBUG nextflow.util.RetryConfig - Missing nextflow session - using default retry config
+Jun-17 13:29:14.292 [main] DEBUG nextflow.plugin.PluginUpdater - Using plugin repository: HttpPluginRepository [registry]; url=https://registry.nextflow.io/api
+Jun-17 13:29:14.300 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jun-17 13:29:14.340 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /g/modbase/aml/dsa_pipeline/nextflow.config
+Jun-17 13:29:14.345 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /g/modbase/aml/dsa_pipeline/nextflow.config
+Jun-17 13:29:14.347 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /g/modbase/aml/dsa_pipeline/nextflow.config
+Jun-17 13:29:14.347 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /g/modbase/aml/dsa_pipeline/nextflow.config
+Jun-17 13:29:14.352 [main] DEBUG nextflow.config.ConfigParserFactory - Using config parser v2
+Jun-17 13:29:14.374 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `local`
+Jun-17 13:29:15.043 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `local`
+Jun-17 13:29:15.126 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [local, slurm]
+Jun-17 13:29:15.191 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Jun-17 13:29:15.191 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Jun-17 13:29:15.212 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/olivucci/.nextflow/secrets/store.json
+Jun-17 13:29:15.216 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@6de6faa6] - activable => nextflow.secret.LocalSecretsProvider@6de6faa6
+Jun-17 13:29:15.236 [main] DEBUG nextflow.cli.CmdRun - Launching `main.nf` [astonishing_yalow] - revision: c9d2493ba4
+Jun-17 13:29:15.343 [main] DEBUG nextflow.Session - Session UUID: 42f7383f-c80c-4ee2-823e-1d6154a90fb6
+Jun-17 13:29:15.344 [main] DEBUG nextflow.Session - Run name: astonishing_yalow
+Jun-17 13:29:15.345 [main] DEBUG nextflow.Session - Executor pool size: 128
+Jun-17 13:29:15.357 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Jun-17 13:29:15.366 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=384; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Jun-17 13:29:15.407 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 26.04.3 build 12259
+  Created: 28-05-2026 08:48 UTC (10:48 CEST)
+  System: Linux 4.18.0-553.124.1.el8_10.x86_64
+  Runtime: Groovy 4.0.31 on OpenJDK 64-Bit Server VM 23.0.2-internal-adhoc.conda.src
+  Encoding: UTF-8 (UTF-8)
+  Process: 405588@seneca.embl.de [10.11.8.232]
+  CPUs: 128 - Mem: 2 TB (9 GB) - Swap: 4 GB (0)
+Jun-17 13:29:15.445 [main] DEBUG nextflow.Session - Work-dir: /g/modbase/aml/dsa_pipeline/work [nfs]
+Jun-17 13:29:15.446 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /g/modbase/aml/dsa_pipeline/bin
+Jun-17 13:29:15.460 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Jun-17 13:29:15.474 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Jun-17 13:29:15.478 [main] DEBUG nextflow.Session - Observer factory (v2): DefaultObserverFactory
+Jun-17 13:29:15.551 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Jun-17 13:29:15.565 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 129; maxThreads: 1000
+Jun-17 13:29:15.669 [main] DEBUG nextflow.Session - Session start
+Jun-17 13:29:15.682 [main] DEBUG nextflow.trace.TraceFileObserver - Workflow started -- trace file: ./results/execution/20260617_132910_trace.txt
+Jun-17 13:29:15.688 [main] DEBUG nextflow.script.ScriptLoaderFactory - Using script parser v2
+Jun-17 13:29:16.272 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jun-17 13:29:16.525 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:BAMTOFQ` matches process wf_tumor_only:BAMTOFQ
+Jun-17 13:29:16.530 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Jun-17 13:29:16.530 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-17 13:29:16.542 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Jun-17 13:29:16.552 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=128; memory=2 TB; capacity=128; pollInterval=100ms; dumpInterval=5m
+Jun-17 13:29:16.555 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Jun-17 13:29:16.615 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'wf_tumor_only:BAMTOFQ': maxForks=0; fair=false; array=0
+Jun-17 13:29:16.685 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Jun-17 13:29:16.686 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-17 13:29:16.688 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'wf_tumor_only:KMER_COUNT': maxForks=0; fair=false; array=0
+Jun-17 13:29:16.692 [main] DEBUG nextflow.Session - Process names: wf_tumor_only:KMER_COUNT, KMER_COUNT, wf_tumor_only:BAMTOFQ, BAMTOFQ
+Jun-17 13:29:16.695 [main] DEBUG nextflow.Session - Igniting dataflow network (3)
+Jun-17 13:29:16.704 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > wf_tumor_only:BAMTOFQ
+Jun-17 13:29:16.705 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > wf_tumor_only:KMER_COUNT
+Jun-17 13:29:16.706 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  _nf_script_387278957864de8d: /g/modbase/aml/dsa_pipeline/workflows/tumor_only.nf
+  _nf_script_7a52291cadd5495b: /g/modbase/aml/dsa_pipeline/modules/tumor_only/kmer_count.nf
+  Main: /g/modbase/aml/dsa_pipeline/main.nf
+  _nf_script_6ee2a724ee6a2542: /g/modbase/aml/dsa_pipeline/modules/tumor_only/bamtofq.nf
+Jun-17 13:29:16.706 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Jun-17 13:29:16.706 [main] DEBUG nextflow.Session - Session await
+Jun-17 13:29:16.854 [Actor Thread 18] DEBUG nextflow.container.SingularityCache - Apptainer found local store for image=https://depot.galaxyproject.org/singularity/samtools:1.17--hd87286a_1; path=/g/modbase/aml/cache/depot.galaxyproject.org-singularity-samtools-1.17--hd87286a_1.img
+Jun-17 13:29:16.991 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-17 13:29:16.995 [Task submitter] INFO  nextflow.Session - [7e/945e5b] Submitted process > wf_tumor_only:BAMTOFQ (test)
+Jun-17 13:29:18.336 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: wf_tumor_only:BAMTOFQ (test); status: COMPLETED; exit: 0; error: -; workDir: /g/modbase/aml/dsa_pipeline/work/7e/945e5b3d54770bcc14da9d73fd8729]
+Jun-17 13:29:18.337 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'TaskFinalizer' minSize=10; maxSize=384; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Jun-17 13:29:18.603 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-17 13:29:18.604 [Task submitter] INFO  nextflow.Session - [c3/14a343] Submitted process > wf_tumor_only:KMER_COUNT (test)
+Jun-17 13:29:23.369 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: wf_tumor_only:KMER_COUNT (test); status: COMPLETED; exit: 0; error: -; workDir: /g/modbase/aml/dsa_pipeline/work/c3/14a343d650f271d55ad279c8c2d22d]
+Jun-17 13:29:23.374 [main] DEBUG nextflow.Session - Session await > all processes finished
+Jun-17 13:29:23.470 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
+Jun-17 13:29:23.470 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Jun-17 13:29:23.474 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'TaskFinalizer' shutdown completed (hard=false)
+Jun-17 13:29:23.482 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=2; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=5.6s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=1; peakCpus=1; peakMemory=0; ]
+Jun-17 13:29:23.592 [main] DEBUG nextflow.trace.ReportObserver - Workflow completed -- rendering execution report
+Jun-17 13:29:24.230 [main] DEBUG nextflow.trace.TimelineObserver - Workflow completed -- rendering execution timeline
+Jun-17 13:29:24.331 [main] DEBUG nextflow.trace.TraceFileObserver - Workflow completed -- saving trace file
+Jun-17 13:29:24.345 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Jun-17 13:29:24.371 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'FileTransfer' shutdown completed (hard=false)
+Jun-17 13:29:24.372 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
+Jun-17 13:40:21.438 [main] DEBUG nextflow.file.FileHelper - Using NXF_TEMP=/g/modbase/aml/tmp
