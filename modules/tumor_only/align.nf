@@ -2,7 +2,7 @@ nextflow.enable.dsl=2
 
 process ALIGN {
 
-    tag "$sample"
+    tag "${sample}.dsa${hap}"
     label 'medium_job'
 
     input:
