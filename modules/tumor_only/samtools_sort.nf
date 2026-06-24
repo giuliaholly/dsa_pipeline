@@ -2,7 +2,7 @@ nextflow.enable.dsl=2
 
 process SAMTOOLS_SORT {
 
-    tag "$sample"
+    tag "${sample}.dsa${hap}"
     label 'medium_job'
     publishDir { "${params.output_dir}/${sample}" }, mode: 'copy'
 

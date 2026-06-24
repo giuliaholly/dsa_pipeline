@@ -11,15 +11,26 @@ workflow {
         before the use, create a cache directory with:
 
 	singularity pull docker://nanozoo/minimap2
+	singularity pull docker://hkubal/clairs-to
+	singularity pull docker://google/deepsomatic:1.10.0
+	singularity pull docker://eichlerlab/severus:1.6.1
 	wget https://github.com/refresh-bio/KMC/releases/download/v3.2.4/KMC3.2.4.linux.arm64.tar.gz
 	wget https://github.com/vgteam/vg/releases/latest
-	wget https://github.com/dellytools/delly/releases/download/v2.1.0/delly-v2.1.0.sif
+	wget https://github.com/tobiasrausch/VarBridge/releases/download/v0.1.8/varbridge-v0.1.8-linux-amd64
+	chmod +x varbridge-v0.1.8-linux-amd64
+	singularity pull docker://dellytools/delly:v2.1.0
 	wget https://human-pangenomics.s3.amazonaws.com/pangenomes/freeze/release2/minigraph-cactus/hprc-v2.0-mc-chm13.gbz
 	vg index -t 10 -j hprc-v1.1-mc-chm13.dist --no-nested-distance hprc-v1.1-mc-chm13.gbz
 	vg gbwt -p --num-threads 10 -r hprc-v1.1-mc-chm13.ri -Z hprc-v1.1-mc-chm13.gbz
 	vg haplotypes -v 2 -t 10 -H hprc-v1.1-mc-chm13.hapl hprc-v1.1-mc-chm13.gbz
 	cp /g/solexa/bin/software/kent/bin/x86_64/faSplit ${SINGULARITY_CACHE}
 	cp /g/solexa/bin/software/kent/bin/x86_64/faCount ${SINGULARITY_CACHE}
+	cp /scratch/olivucci/leukemia/findTandemRepeats ${SINGULARITY_CACHE}
+	singularity pull docker://ensemblorg/ensembl-vep
+	git clone https://github.com/Ensembl/ensembl-vep.git
+	cd ensembl-vep
+	perl INSTALL.pl
+	INSTALL.pl -a c -s homo_sapiens -y GRCh38
 
 	USE:
 
