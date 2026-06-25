@@ -14,6 +14,7 @@ process TRF {
     script:
 
     """
+    export PATH="${params.work_dir}/mamba/bin:\${PATH}"
     python3 ${params.singularity_cache}/findTandemRepeats --merge ${fasta} ${sample}.dsa${hap}.trf.bed
 
     """

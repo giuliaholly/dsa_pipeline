@@ -15,13 +15,13 @@ process FILTER_SNV {
     script:
 
     """
-    bcftools +split-vep ${vep_snv_vcf} -f '%CHROM\t%POS\t%REF\t%ALT\t%SYMBOL\t%Consequence\t%CADD_PHRED\n' > ${sample}.vep.snv.tsv
+    PATTERN=\$(paste -sd'|' ${params.genes})
 
-    awk '
-    NR==FNR { genes[\$1]=1; next }
-    \$5 != "" && \$5 in genes
-    ' ${params.genes} ${sample}.vep.snv.tsv \
-    > ${sample}.vep.snv.filtered.tsv
+    (
+        bcftools view -h ${vep_snv_vcf}
+        bcftools view -H ${vep_snv_vcf} | \
+        grep -P "CSQ=.*(\\\\b(\${PATTERN})\\\\b)"
+    ) > ${sample}.dsa${hap}.vep.snv.filtered.vcf
 
     """
 }

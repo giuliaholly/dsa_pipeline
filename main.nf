@@ -27,10 +27,6 @@ workflow {
 	cp /g/solexa/bin/software/kent/bin/x86_64/faCount ${SINGULARITY_CACHE}
 	cp /scratch/olivucci/leukemia/findTandemRepeats ${SINGULARITY_CACHE}
 	singularity pull docker://ensemblorg/ensembl-vep
-	git clone https://github.com/Ensembl/ensembl-vep.git
-	cd ensembl-vep
-	perl INSTALL.pl
-	INSTALL.pl -a c -s homo_sapiens -y GRCh38
 
 	USE:
 

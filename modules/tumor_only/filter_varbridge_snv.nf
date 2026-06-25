@@ -10,7 +10,7 @@ process FILTER_VARBRIDGE_SNV {
     tuple val(sample), val(hap1), path(hap1_GRCh38_vcf), path(hap1_GRCh38_tbi), path(hap1_GRCh38_bed), path(hap1_CHM13_vcf), path(hap1_CHM13_tbi), path(hap1_CHM13_bed), val(hap2), path(hap2_GRCh38_vcf), path(hap2_GRCh38_tbi), path(hap2_GRCh38_bed), path(hap2_CHM13_vcf), path(hap2_CHM13_tbi), path(hap2_CHM13_bed)
 
     output:
-    tuple val(sample), path("${sample}.GRCh38.somatic.snv.bcf"), path("${sample}.GRCh38.somatic.snv.bcf.csi"), path("${sample}.dsa1.both.nolift.snv.bed"), path("${sample}.dsa2.both.nolift.snv.bed")
+    tuple val(sample), path("${sample}.GRCh38.somatic.snv.vcf"), path("${sample}.dsa1.both.nolift.snv.bed"), path("${sample}.dsa2.both.nolift.snv.bed")
 
     script:
 
@@ -34,8 +34,7 @@ process FILTER_VARBRIDGE_SNV {
     sort remove.IDs | uniq > remove.IDs.tmp
     mv remove.IDs.tmp remove.IDs
 
-    bcftools view ${sample}.GRCh38.bcf | grep -v -w -Ff remove.IDs | bcftools view -O b -o ${sample}.GRCh38.somatic.snv.bcf -
-    bcftools index ${sample}.GRCh38.somatic.snv.bcf
+    bcftools view ${sample}.GRCh38.bcf | grep -v -w -Ff remove.IDs > ${sample}.GRCh38.somatic.snv.vcf
 
     rm remove.IDs
 
