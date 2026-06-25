@@ -8,43 +8,177 @@ workflow {
     if( params.help ) {
         log.info '''
         -----------------------------------------------------------------------
-        before the use, create a cache directory with:
+        # DSA Pipeline
 
-	singularity pull docker://nanozoo/minimap2
-	singularity pull docker://hkubal/clairs-to
-	singularity pull docker://google/deepsomatic:1.10.0
-	singularity pull docker://eichlerlab/severus:1.6.1
-	wget https://github.com/refresh-bio/KMC/releases/download/v3.2.4/KMC3.2.4.linux.arm64.tar.gz
-	wget https://github.com/vgteam/vg/releases/latest
-	wget https://github.com/tobiasrausch/VarBridge/releases/download/v0.1.8/varbridge-v0.1.8-linux-amd64
-	chmod +x varbridge-v0.1.8-linux-amd64
-	singularity pull docker://dellytools/delly:v2.1.0
-	wget https://human-pangenomics.s3.amazonaws.com/pangenomes/freeze/release2/minigraph-cactus/hprc-v2.0-mc-chm13.gbz
-	vg index -t 10 -j hprc-v1.1-mc-chm13.dist --no-nested-distance hprc-v1.1-mc-chm13.gbz
-	vg gbwt -p --num-threads 10 -r hprc-v1.1-mc-chm13.ri -Z hprc-v1.1-mc-chm13.gbz
-	vg haplotypes -v 2 -t 10 -H hprc-v1.1-mc-chm13.hapl hprc-v1.1-mc-chm13.gbz
-	cp /g/solexa/bin/software/kent/bin/x86_64/faSplit ${SINGULARITY_CACHE}
-	cp /g/solexa/bin/software/kent/bin/x86_64/faCount ${SINGULARITY_CACHE}
-	cp /scratch/olivucci/leukemia/findTandemRepeats ${SINGULARITY_CACHE}
-	singularity pull docker://ensemblorg/ensembl-vep
+	        Personalized reference construction and somatic variant discovery from ONT tumor sequencing data.
 
-	USE:
+	        ## DESCRIPTION
 
-	WORK_DIR="/g/modbase/aml/"
-	SINGULARITY_CACHE="/g/modbase/aml/cache"
-	TS=$(date +%Y%m%d_%H%M%S)
-	export TMPDIR="${WORK_DIR}/tmp"
-	mkdir -p $TMPDIR
-	export NXF_TEMP="${WORK_DIR}/tmp"
-	export APPTAINER_TMPDIR="${WORK_DIR}/tmp"
-	export NXF_APPTAINER_CACHEDIR="${SINGULARITY_CACHE}"
+	        DSA Pipeline builds a donor-specific diploid assembly (DSA) from the Human Pangenome,
+	        aligns Oxford Nanopore (ONT) reads against the personalized reference, performs SNV
+	        and SV calling, lifts variants to GRCh38 coordinates using VarBridge, annotates
+	        variants with Ensembl VEP, and optionally prioritizes variants in user-defined genes.
 
-	nextflow run main.nf --run pipeline --timestamp $TS --samplesheet samplesheet.csv --output_dir ./results -c nextflow.config -profile local --singularity_cache /g/modbase/aml/cache/ --bind_path ${WORK_DIR},${SINGULARITY_CACHE} -resume
+	        Current release supports tumor-only analysis.
+
+	        ## FEATURES
+
+	        * Personalized diploid reference construction from the Human Pangenome
+	        * ONT BAM and FASTQ input support
+	        * Multi-sample processing
+	        * SNV calling
+	        * SV calling
+	        * Liftover to GRCh38 using VarBridge
+	        * Somatic variant filtering
+	        * Ensembl VEP annotation
+	        * Gene panel prioritization
+
+	        ## INPUT
+
+	        Samples must be provided through a tab-separated CSV file with header:
+
+	        sample	tumor	normal
+
+	        Example:
+
+	        sample	tumor	normal
+	        PAT001	/data/tumor.bam	/data/normal.bam
+	        PAT002	/data/tumor.fastq	data/normal.fastq
+
+	        For tumor-only mode, leave the normal column empty.
+
+	        ## REQUIRED PARAMETERS
+
+	        --run                  Workflow mode (pipeline)
+	        --samplesheet          Sample sheet
+	        --output_dir           Output directory
+	        --work_dir             Working directory
+	        --GRCh38               GRCh38 reference FASTA
+	        --CHM13                CHM13 reference FASTA
+	        --vep_cache            Ensembl VEP cache directory
+	        --singularity_cache    Apptainer/Singularity cache directory
+	        --bind_path            Comma-separated list of bind-mounted directories
+	        --tmp_dir              Temporary directory
+	        --timestamp            Run timestamp
+
+	        ## OPTIONAL PARAMETERS
+
+	        --genes                Gene list for variant prioritization
+
+
+	        ## EXECUTION
+
+	        SLURM (recommended):
+
+	        nextflow run dsa_pipeline/main.nf 
+	        --run pipeline 
+	        --samplesheet samplesheet.csv 
+	        --output_dir results 
+	        --work_dir /path/to/workdir 
+	        --GRCh38 GRCh38.fa 
+	        --CHM13 CHM13.fa 
+	        --vep_cache /path/to/vep_cache 
+	        --singularity_cache /path/to/cache 
+	        --bind_path /path1,/path2 
+	        -profile slurm
+
+	        ## OUTPUTS
+
+	        Results are written to:
+
+	        output_dir/SAMPLE_NAME/
+
+	        Key results are located in:
+
+	        output_dir/SAMPLE_NAME/varbridge/
+
+	        Contents include:
+
+	        * Variants lifted to GRCh38
+	        * Somatic-filtered variants
+	        * VEP-annotated variants
+	        * Gene-prioritized variants (when --genes is supplied)
+
+	        ## GENE PRIORITIZATION
+
+	        Provide a text file containing one gene symbol per line:
+	
+	        TP53
+	        FLT3
+	        NPM1
+	        RUNX1
+	        DNMT3A
+        
+	        Use:
+
+	        --genes genes.txt
+
+	        ## STATUS
+
+	        Supported:
+
+	        * Tumor-only mode
+	        * ONT BAM input
+	        * ONT FASTQ input
+	        * Multi-sample processing
+	        * SNV calling
+	        * SV calling
+	        * VEP annotation
+	        * Gene panel prioritization
+
+	        In development:
+
+	        * Tumor-normal paired analysis
+	        * Somatic paired calling
+	        * Karyotype analysis/CNV calling
+
+	        ## REFERENCES
+
+	        Human Pangenome: https://humanpangenome.org
+	        VarBridge: https://github.com/tobiasrausch/VarBridge
+	        Ensembl VEP: https://www.ensembl.org/info/docs/tools/vep
+
 
         -----------------------------------------------------------------------
         '''.stripIndent()
         return
     }
+
+def required_params = [
+    'run',
+    'samplesheet',
+    'output_dir',
+    'work_dir',
+    'GRCh38',
+    'CHM13',
+    'vep_cache',
+    'singularity_cache',
+    'bind_path'
+]
+
+def missing = required_params.findAll { !params[it] }
+
+if( missing ) {
+    log.error """
+    ERROR: Missing required parameter(s):
+
+    ${missing.collect { "--${it}" }.join('\n    ')}
+
+    Example:
+
+    nextflow run main.nf \
+        --run pipeline \
+        --samplesheet samplesheet.csv \
+        --output_dir results \
+        --work_dir /path/to/workdir \
+        --GRCh38 GRCh38.fa \
+        --CHM13 CHM13.fa \
+        --vep_cache /path/to/vep_cache \
+        --singularity_cache /path/to/cache \
+        --bind_path /path1,/path2
+    """
+    System.exit(1)
+}
 
 samples_ch = Channel
     .fromPath(params.samplesheet)

@@ -21,7 +21,7 @@ process FILTER_SNV {
         bcftools view -h ${vep_snv_vcf}
         bcftools view -H ${vep_snv_vcf} | \
         grep -P "CSQ=.*(\\\\b(\${PATTERN})\\\\b)"
-    ) > ${sample}.dsa${hap}.vep.snv.filtered.vcf
+    ) > ${sample}.vep.snv.filtered.vcf
 
     """
 }
