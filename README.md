@@ -139,7 +139,7 @@ Example:
 ```text
 sample  tumor  normal
 PAT001  /data/PAT001_tumor.bam  /data/PAT001_normal.bam
-PAT002  /data/PAT002_tumor.fastq.gz  /data/PAT002_normal.fastq.gz
+PAT002  /data/PAT002_tumor.fastq  /data/PAT002_normal.fastq
 ```
 
 ### Columns
