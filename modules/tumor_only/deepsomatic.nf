@@ -4,6 +4,7 @@ process DEEPSOMATIC {
 
     tag "${sample}.dsa${hap}"
     label 'big_job'
+    publishDir { "${params.output_dir}/${sample}" }, mode: 'copy'
 
     input:
     tuple val(sample), val(hap), path(bam), path(bai), path(fasta), path(fai)

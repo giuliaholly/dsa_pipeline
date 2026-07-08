@@ -152,8 +152,7 @@ def required_params = [
     'GRCh38',
     'CHM13',
     'vep_cache',
-    'singularity_cache',
-    'bind_path'
+    'singularity_cache'
 ]
 
 def missing = required_params.findAll { !params[it] }
@@ -196,7 +195,7 @@ samples_ch = Channel
         )
     }
 
-if (params.run == 'pipeline') {
+if (params.run == 'tumor_only') {
 
 tumor_ch = samples_ch
     .filter { sample, tumor, normal -> tumor }
