@@ -49,7 +49,7 @@ workflow {
 
 	        ## REQUIRED PARAMETERS
 
-	        --run                  Workflow mode (pipeline)
+	        --run                  Workflow mode (tumor_only)
 	        --samplesheet          Sample sheet
 	        --output_dir           Output directory
 	        --work_dir             Working directory
@@ -71,7 +71,7 @@ workflow {
 	        SLURM (recommended):
 
 	        nextflow run dsa_pipeline/main.nf 
-	        --run pipeline 
+	        --run tumor_only 
 	        --samplesheet samplesheet.csv 
 	        --output_dir results 
 	        --work_dir /path/to/workdir 
