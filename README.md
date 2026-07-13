@@ -195,7 +195,7 @@ Example SLURM execution:
 
 ```bash
 nextflow run dsa_pipeline/main.nf \
-    --run pipeline \
+    --run tumor_only \
     --timestamp $TS \
     --samplesheet ${WORK_DIR}/samplesheet.csv \
     --output_dir ${WORK_DIR}/results \
