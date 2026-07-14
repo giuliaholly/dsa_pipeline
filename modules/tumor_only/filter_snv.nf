@@ -10,7 +10,7 @@ process FILTER_SNV {
     tuple val(sample), path(vep_snv_vcf)
 
     output:
-    tuple val(sample), path("${sample}.vep.snv.filtered.tsv")
+    tuple val(sample), path("${sample}.vep.snv.filtered.vcf")
 
     script:
 

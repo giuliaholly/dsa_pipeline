@@ -10,7 +10,7 @@ process FILTER_SV {
     tuple val(sample), val(hap), path(vep_sv_vcf)
 
     output:
-    tuple val(sample), val(hap), path("${sample}.dsa${hap}.vep.sv.filtered.tsv")
+    tuple val(sample), val(hap), path("${sample}.dsa${hap}.vep.sv.filtered.vcf")
 
     script:
 
