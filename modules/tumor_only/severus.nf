@@ -18,7 +18,7 @@ process SEVERUS_SV {
     severus --target-bam ${bam} --out-dir . -t 8  --vntr-bed ${trf}
     mv all_SVs/severus_all.vcf all_SVs/${sample}.dsa${hap}.severus_all.vcf
     bgzip all_SVs/${sample}.dsa${hap}.severus_all.vcf
-    tabix -p all_SVs/${sample}.dsa${hap}.severus_all.vcf.gz
+    tabix -p vcf all_SVs/${sample}.dsa${hap}.severus_all.vcf.gz
 
     """
 }
