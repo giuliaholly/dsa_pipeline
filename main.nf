@@ -1,7 +1,7 @@
 nextflow.enable.dsl=2
 
 include { tumor_only as wf_tumor_only } from './workflows/tumor_only.nf'
-//include { paired as wf_paired } from './workflows/paired.nf'
+include { tumor_normal as wf_tumor_normal } from './workflows/tumor_normal.nf'
 
 workflow {
 
@@ -18,8 +18,11 @@ workflow {
 	        aligns Oxford Nanopore (ONT) reads against the personalized reference, performs SNV
 	        and SV calling, lifts variants to GRCh38 coordinates using VarBridge, annotates
 	        variants with Ensembl VEP, and optionally prioritizes variants in user-defined genes.
+	        If tumor_only mode, the DSA will be constructed based on tumor ONT reads. 
+	        If tumor_normal mode, the DSA will be constructed based on normal short-reads fastq,
+	        then tumor ONT reads will be aligned to the DSA and used for variant calling.
 
-	        Current release supports tumor-only analysis.
+	        Current release supports both tumor-only and tumor-normal analysis.
 
 	        ## FEATURES
 
@@ -37,20 +40,21 @@ workflow {
 
 	        Samples must be provided through a tab-separated CSV file with header:
 
-	        sample	tumor	normal
+	        sample,tumor,normal_R1,normal_R2
 
 	        Example:
 
-	        sample	tumor	normal
-	        PAT001	/data/tumor.bam	/data/normal.bam
-	        PAT002	/data/tumor.fastq	data/normal.fastq
+	        sample,tumor,normal_R1,normal_R2
+	        PAT001,/data/tumor.bam,/data/normal_R1.fastq,/data/normal_R2.fastq
+	        PAT002,/data/tumor.fastq,/data/normal_R1.fastq,/data/normal_R2.fastq
+	        PAT002,/data/tumor.fastq,,
 
 	        For tumor-only mode, leave the normal column empty.
 
 	        ## REQUIRED PARAMETERS
 
-	        --run                  Workflow mode (tumor_only)
-	        --samplesheet          Sample sheet
+	        --run                  Workflow mode (tumor_only or tumor_normal)
+	        --samplesheet          Parth to sample sheet
 	        --output_dir           Output directory
 	        --work_dir             Working directory
 	        --GRCh38               GRCh38 reference FASTA
@@ -117,9 +121,9 @@ workflow {
 
 	        Supported:
 
-	        * Tumor-only mode
-	        * ONT BAM input
-	        * ONT FASTQ input
+	        * Tumor-only and tumor-normal mode
+	        * ONT BAM or FASTQ input for tumor sample
+	        * Short reads paired-end FASTQ input for normal sample
 	        * Multi-sample processing
 	        * SNV calling
 	        * SV calling
@@ -128,7 +132,6 @@ workflow {
 
 	        In development:
 
-	        * Tumor-normal paired analysis
 	        * Somatic paired calling
 	        * Karyotype analysis/CNV calling
 
@@ -191,52 +194,65 @@ samples_ch = Channel
         tuple(
             sample,
             row.tumor?.trim(),
-            row.normal?.trim()
+            row.normal_R1?.trim(),
+            row.normal_R2?.trim()
+        )
+    }
+
+tumor_ch = samples_ch
+    .filter { sample, tumor, normal_R1, normal_R2 -> tumor }
+    .map    { sample, tumor, normal_R1, normal_R2 ->
+        tuple(sample, file(tumor))
+    }
+
+normal_ch = samples_ch
+    .filter { sample, tumor, normal_R1, normal_R2 ->
+        normal_R1 && normal_R2
+    }
+    .map { sample, tumor, normal_R1, normal_R2 ->
+        tuple(
+            sample,
+            [
+                file(normal_R1),
+                file(normal_R2)
+            ]
         )
     }
 
 if (params.run == 'tumor_only') {
 
-tumor_ch = samples_ch
-    .filter { sample, tumor, normal -> tumor }
-    .map    { sample, tumor, normal ->
-        tuple(sample, file(tumor))
-    }
-    .ifEmpty {
+    tumor_ch = tumor_ch.ifEmpty {
         error """
         Workflow requires tumor fastq/bam input.
         Please provide 'tumor' column in samplesheet.
         """.stripIndent()
     }
-wf_tumor_only(tumor_ch)
+
+    wf_tumor_only(tumor_ch)
+
 }
+else if (params.run == 'tumor_normal') {
 
-//if (params.run == 'paired') {
+    tumor_ch = tumor_ch.ifEmpty {
+        error "Tumor input missing."
+    }
 
-//tumor_ch = samples_ch
-//    .filter { sample, tumor, normal -> tumor }
-//    .map    { sample, tumor, normal ->
-//        tuple(sample, file(tumor))
-//    }
-//    .ifEmpty {
-//        error """
-//        Workflow requires tumor fastq/bam input.
-//        Please provide 'tumor' column in samplesheet.
-//        """.stripIndent()
-//    }
-//normal_ch = samples_ch
-//    .filter { sample, tumor, normal -> normal }
-//    .map    { sample, tumor, normal ->
-//        tuple(sample, file(normal))
-//    }
-//    .ifEmpty {
-//        error """
-//        Workflow requires normal fastq/bam input.
-//        Please provide 'normal' column in samplesheet.
-//        """.stripIndent()
-//    }
+    normal_ch = normal_ch.ifEmpty {
+        error "Normal input missing."
+    }
 
-//    wf_paired(tumor_ch, normal_ch)
-//}
+    wf_tumor_normal(tumor_ch, normal_ch)
 
+}
+else {
+
+    error """
+    Invalid value for --run: '${params.run}'
+
+    Allowed values are:
+      - tumor_only
+      - tumor_normal
+    """.stripIndent()
+
+}
 }
