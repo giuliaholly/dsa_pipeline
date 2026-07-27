@@ -7,7 +7,7 @@ process CONSENSUS_SV {
     publishDir { "${params.output_dir}/${sample}" }, mode: 'copy'
 
     input:
-    tuple val(sample), val(hap), path(delly), path(delly_index), path(severus), path(severus_tbi)
+    tuple val(sample), val(hap), path(sv_bcf), path(cov_gz), path(cnv_bcf), path(seg_bed), path(sv_csi), path(cnv_csi), path(severus), path(severus_tbi)
 
     output:
     tuple val(sample), val(hap), path("${sample}.dsa${hap}.consensus.somatic.SV.bcf"), path("${sample}.dsa${hap}.consensus.somatic.SV.bcf.csi")
@@ -21,20 +21,20 @@ process CONSENSUS_SV {
         -e 0 \
         -m 0 \
         -n 250000000 \
-        ${delly}
+        ${sv_bcf}
 
     awk '\$2=="TP"' out.sv.classification \
         | cut -f1 \
         | sort -u \
         > delly.tp
 
-    bcftools query -f '%ID\n' ${delly} \
+    bcftools query -f '%ID\n' ${sv_bcf} \
         | sort -u \
         > all.sv
 
     grep -v -w -Ff delly.tp all.sv > remove.sv
 
-    bcftools view ${delly} \
+    bcftools view ${sv_bcf} \
         | grep -v -w -Ff remove.sv \
         | bcftools view -Ob \
         -o ${sample}.dsa${hap}.consensus.somatic.SV.bcf

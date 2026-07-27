@@ -20,9 +20,9 @@ Current features include:
 * Optional gene-based prioritization using a user-provided gene list
 * Multi-sample processing
 
-Tumor-only mode is currently supported.
+If tumor_only mode, the DSA will be constructed based on tumor ONT reads. 
 
-Tumor-normal mode is under active development. The planned workflow will generate the personalized reference from the matched normal sample and perform paired somatic variant calling.
+If tumor_normal mode, the DSA will be constructed based on normal short-reads fastq, then tumor ONT reads will be aligned to the DSA and used for variant calling.
 
 ---
 
@@ -64,7 +64,9 @@ wget https://github.com/tobiasrausch/VarBridge/releases/download/v0.1.8/varbridg
 
 chmod +x varbridge-v0.1.8-linux-amd64
 
-singularity pull docker://dellytools/delly:v2.1.0
+wget https://github.com/dellytools/delly/releases/download/v2.5.1/delly-v2.5.1.sif
+
+wget https://github.com/dellytools/delly/blob/main/R/rd.R
 
 wget https://human-pangenomics.s3.amazonaws.com/pangenomes/freeze/release2/minigraph-cactus/hprc-v2.0-mc-chm13.gbz
 
@@ -131,31 +133,33 @@ git clone https://github.com/giuliaholly/dsa_pipeline.git
 Input samples must be provided through a tab-separated CSV file with the following header:
 
 ```text
-sample  tumor  normal
+sample,tumor,normal_R1,normal_R2
 ```
 
 Example:
 
 ```text
-sample  tumor  normal
-PAT001  /data/PAT001_tumor.bam  /data/PAT001_normal.bam
-PAT002  /data/PAT002_tumor.fastq  /data/PAT002_normal.fastq
+sample,tumor,normal_R1,normal_R2
+PAT001,/data/tumor.bam,/data/normal_R1.fastq,/data/normal_R2.fastq
+PAT002,/data/tumor.fastq,/data/normal_R1.fastq,/data/normal_R2.fastq
+PAT003,/data/tumor.fastq,,
 ```
 
 ### Columns
 
-| Column | Description                              |
-| ------ | ---------------------------------------- |
-| sample | Sample identifier                        |
-| tumor  | Path to tumor BAM or FASTQ file          |
-| normal | Path to matched normal BAM or FASTQ file |
+| Column    | Description                              |
+| --------- | ---------------------------------------- |
+| sample    | Sample identifier                        |
+| tumor     | Path to tumor BAM or FASTQ file          |
+| normal_R1 | Path to normal R1 FASTQ file             |
+| normal_R2 | Path to normal R2 FASTQ file             |
 
 Notes:
 
-* BAM and FASTQ inputs are supported.
-* ONT data only.
+* BAM or FASTQ ONT data as input for tumor sample
+* Short reads paired-end FASTQ as input for normal sample
 * Multiple samples can be processed simultaneously by adding one sample per row.
-* In tumor-only mode, just leave the "normal" column empty.
+* In tumor-only mode, just leave the "normal" columns empty.
 
 ---
 
@@ -217,7 +221,7 @@ nextflow run dsa_pipeline/main.nf \
 
 | Parameter             | Description                                   |
 | --------------------- | --------------------------------------------- |
-| `--run`               | Workflow mode (`pipeline`)                    |
+| `--run`               | Workflow mode (`tumor_only` or `tumor_normal`)|
 | `--timestamp`         | Execution timestamp                           |
 | `--samplesheet`       | Input sample sheet                            |
 | `--output_dir`        | Output directory                              |
@@ -286,9 +290,9 @@ DNMT3A
 
 ### Supported
 
-* ONT BAM input
-* ONT FASTQ input
-* Tumor-only analysis
+* ONT BAM or FASTQ input for tumor sample
+* Short reads paired-end FASTQ input for normal sample
+* Tumor-only and tumor-normal mode
 * Multi-sample processing
 * Personalized reference generation
 * SNV calling
@@ -298,7 +302,6 @@ DNMT3A
 
 ### In Development
 
-* Matched tumor-normal analysis
 * Somatic paired calling using tumor/normal personalized references
 * Karyotype analysis/CNV calling
 
