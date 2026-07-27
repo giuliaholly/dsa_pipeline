@@ -4,7 +4,6 @@ process SAMTOOLS_SORT {
 
     tag "${sample}.dsa${hap}"
     label 'medium_job'
-    publishDir { "${params.output_dir}/${sample}" }, mode: 'copy'
 
     input:
     tuple val(sample), val(hap), path(sam)

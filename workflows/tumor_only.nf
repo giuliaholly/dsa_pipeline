@@ -10,6 +10,7 @@ include { ALIGN } from '../modules/tumor_only/align.nf'
 include { ALIGN_GRCh38 } from '../modules/tumor_only/align_grch38.nf'
 include { ALIGN_CHM13 } from '../modules/tumor_only/align_chm13.nf'
 include { SAMTOOLS_SORT } from '../modules/tumor_only/samtools_sort.nf'
+include { BAM_TO_CRAM } from '../modules/tumor_only/bam_to_cram.nf'
 include { GRCh38_SORT } from '../modules/tumor_only/GRCh38_sort.nf'
 include { CHM13_SORT } from '../modules/tumor_only/CHM13_sort.nf'
 include { DELLY_SV } from '../modules/tumor_only/delly.nf'
@@ -17,7 +18,6 @@ include { DELLY_INDEX } from '../modules/tumor_only/delly_index.nf'
 include { TRF } from '../modules/tumor_only/trf.nf'
 include { SEVERUS_SV } from '../modules/tumor_only/severus.nf'
 include { CLAIRS_TO } from '../modules/tumor_only/clairs_to.nf'
-include { DEEPSOMATIC } from '../modules/tumor_only/deepsomatic.nf'
 include { CONSENSUS_SV } from '../modules/tumor_only/consensus_sv.nf'
 include { SV_STATS } from '../modules/tumor_only/sv_stats.nf'
 include { CONSENSUS_SNV } from '../modules/tumor_only/consensus_snv.nf'
@@ -56,23 +56,22 @@ workflow tumor_only {
     dsa_to_GRCh38 = ALIGN_GRCh38(haplotype_ch)
     dsa_to_CHM13 = ALIGN_CHM13(haplotype_ch)
     sorted_bam = SAMTOOLS_SORT(sam_ch)
+    cram_input = haplotype_ch.combine(sorted_bam, by: [0,1])
+    cram = BAM_TO_CRAM(cram_input)
     sorted_grch38 = GRCh38_SORT(dsa_to_GRCh38)
     sorted_chm13 = CHM13_SORT(dsa_to_CHM13)
     delly_input = sorted_bam.join(haplotype_ch, by: [0,1])
     clair_input = sorted_bam.join(haplotype_ch, by: [0,1]).join(fa_index, by:[0,1])
-    deepsomatic_input = sorted_bam.join(haplotype_ch, by: [0,1]).join(fa_index, by:[0,1])
     delly_bcf = DELLY_SV(delly_input)
     delly_index = DELLY_INDEX(delly_bcf)
     trf = TRF(haplotype_ch)
     severus_input = sorted_bam.join(trf, by: [0,1])
     severus_vcf = SEVERUS_SV(severus_input)
     clair_vcfs = CLAIRS_TO(clair_input)
-    deepsomatic_bcf = DEEPSOMATIC(deepsomatic_input)
     consensusSV_input = delly_bcf.join(delly_index, by:[0,1]).join(severus_vcf, by:[0,1])
     consensus_SV = CONSENSUS_SV(consensusSV_input)
     SV_stats = SV_STATS(consensus_SV)
-    consensusSNV_input = clair_vcfs.join(deepsomatic_bcf, by:[0,1])
-    consensus_SNV = CONSENSUS_SNV(consensusSNV_input)
+    consensus_SNV = CONSENSUS_SNV(clair_vcfs)
     varbridge_snv_input = consensus_SNV.join(sorted_grch38, by:[0,1]).join(sorted_chm13, by:[0,1])
     varbridge_sv_input = consensus_SV.join(sorted_grch38, by:[0,1])
     lifted_SNV = VARBRIDGE_SNV(varbridge_snv_input)

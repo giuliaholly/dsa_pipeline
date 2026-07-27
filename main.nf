@@ -47,7 +47,7 @@ workflow {
 	        sample,tumor,normal_R1,normal_R2
 	        PAT001,/data/tumor.bam,/data/normal_R1.fastq,/data/normal_R2.fastq
 	        PAT002,/data/tumor.fastq,/data/normal_R1.fastq,/data/normal_R2.fastq
-	        PAT002,/data/tumor.fastq,,
+	        PAT003,/data/tumor.fastq,,
 
 	        For tumor-only mode, leave the normal column empty.
 
