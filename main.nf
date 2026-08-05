@@ -57,6 +57,7 @@ workflow {
 	        --samplesheet          Parth to sample sheet
 	        --output_dir           Output directory
 	        --work_dir             Working directory
+		--tmp_dir              Temporary directory
 	        --GRCh38               GRCh38 reference FASTA
 	        --CHM13                CHM13 reference FASTA
 	        --vep_cache            Ensembl VEP cache directory
